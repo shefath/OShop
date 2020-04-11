@@ -1,19 +1,37 @@
 <p>
   <a routerLink="/admin/products/new" class="btn btn-primary">New Product</a>
 </p>
+<p>
+  <input
+    #query
+    (keyup)="filter(query.value)"
+    type="text"
+    class="form-control"
+    placeholder="Search..."
+  />
+</p>
 
-<table class="table">
+<table
+  class="table table-striped"
+  [mfData]="filteredProducts"
+  #mf="mfDataTable"
+  [mfRowsOnPage]="5"
+>
   <thead>
     <tr>
-      <th>Title</th>
-      <th>Price</th>
+      <th>
+        <mfDefaultSorter by="title">Title</mfDefaultSorter>
+      </th>
+      <th>
+        <mfDefaultSorter by="price">Price</mfDefaultSorter>
+      </th>
       <th></th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let p of products$ | async as products">
-      <td>{{ p.data.title }}</td>
-      <td>{{ p.data.price }}</td>
+    <tr *ngFor="let p of mf.data">
+      <td>{{ p.title }}</td>
+      <td>{{ p.price }}</td>
       <td>
         <a [routerLink]="['/admin/products', p.id]" class="btn btn-primary"
           >Edit</a
@@ -21,5 +39,14 @@
       </td>
     </tr>
   </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="4">
+        <mfBootstrapPaginator
+          [rowsOnPageSet]="[5, 10, 25]"
+        ></mfBootstrapPaginator>
+      </td>
+    </tr>
+  </tfoot>
 </table>
 <!-- <p>{{ products$ | async | json }}</p> -->

@@ -10,8 +10,23 @@ import { Component, Input } from "@angular/core";
 export class ProductCardComponent {
   @Input("product") product: Product;
   @Input("show-actions") showActions = true;
+  @Input("shopping-cart") shoppingCart;
 
   constructor(private cartService: ShoppingCartService) {}
 
-  addtoCart(product) {}
+  addtoCart() {
+    this.cartService.addToCart(this.product);
+  }
+
+  removeFromCart() {
+    this.cartService.removeFromCart(this.product);
+  }
+
+  getQuantity() {
+    if (!this.shoppingCart) {
+      return 0;
+    }
+    const item = this.shoppingCart.items[this.product.id];
+    return item ? item.quantity : 0;
+  }
 }

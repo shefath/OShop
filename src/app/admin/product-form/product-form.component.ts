@@ -15,7 +15,7 @@ export class ProductFormComponent implements OnInit {
   categories$;
   product: Product = {
     title: "",
-    id: "",
+    $key: "",
     category: "",
     imageUrl: "",
     price: null,

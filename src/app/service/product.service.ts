@@ -30,8 +30,8 @@ export class ProductService {
         map((actions) => {
           return actions.map((a) => {
             const data = a.payload.val();
-            const id = a.payload.key;
-            return { id, ...(data as IProduct) } as Product;
+            const $key = a.payload.key;
+            return { $key, ...(data as IProduct) } as Product;
           });
         })
       );
@@ -43,9 +43,9 @@ export class ProductService {
       .snapshotChanges()
       .pipe(
         map((actions) => {
-          const id = actions.payload.key;
+          const $key = actions.payload.key;
           const data = actions.payload.val();
-          return { id, ...(data as IProduct) } as Product;
+          return { $key, ...(data as IProduct) } as Product;
         })
       );
   }

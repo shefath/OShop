@@ -1,6 +1,8 @@
+import { ShoppingCart } from "./../model/shopping-cart";
 import { Product } from "./../model/product";
 import { ShoppingCartService } from "./../service/shopping-cart.service";
 import { Component, Input } from "@angular/core";
+import { ShoppingCartItem } from "../model/shopping-cart-item";
 
 @Component({
   selector: "product-card",
@@ -8,7 +10,7 @@ import { Component, Input } from "@angular/core";
   styleUrls: ["./product-card.component.css"],
 })
 export class ProductCardComponent {
-  @Input("product") product: Product;
+  @Input("product") product;
   @Input("show-actions") showActions = true;
   @Input("shopping-cart") shoppingCart;
 
@@ -16,17 +18,5 @@ export class ProductCardComponent {
 
   addtoCart() {
     this.cartService.addToCart(this.product);
-  }
-
-  removeFromCart() {
-    this.cartService.removeFromCart(this.product);
-  }
-
-  getQuantity() {
-    if (!this.shoppingCart) {
-      return 0;
-    }
-    const item = this.shoppingCart.items[this.product.id];
-    return item ? item.quantity : 0;
   }
 }

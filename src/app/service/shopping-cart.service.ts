@@ -1,7 +1,10 @@
-import { IItem, Item } from "./../model/product";
+import { IShoppingCartItem } from "./../model/shopping-cart-item";
+import { IItem, Product } from "./../model/product";
 import { map, take } from "rxjs/operators";
 import { Injectable } from "@angular/core";
 import { AngularFireDatabase } from "@angular/fire/database";
+import { ShoppingCart } from "../model/shopping-cart";
+import { ShoppingCartItem } from "../model/shopping-cart-item";
 
 @Injectable({
   providedIn: "root",
@@ -9,15 +12,37 @@ import { AngularFireDatabase } from "@angular/fire/database";
 export class ShoppingCartService {
   constructor(private db: AngularFireDatabase) {}
 
-  create() {
+  async getCart() {
+    const cartId = await this.getOrCreateCartId();
+    return this.db
+      .object("/shopping-cart/" + cartId)
+      .valueChanges()
+      .pipe(
+        map((x: any) => {
+          x = x || {};
+          return new ShoppingCart(x.items);
+        })
+      );
+  }
+
+  async addToCart(product) {
+    this.updateItem(product, 1);
+  }
+
+  async removeFromCart(product) {
+    this.updateItem(product, -1);
+  }
+
+  async clearCart() {
+    const cartId = await this.getOrCreateCartId();
+    this.db.object("/shopping-cart/" + cartId + "/items").remove();
+    //localStorage.removeItem("cartId");
+  }
+
+  private create() {
     return this.db.list("/shopping-cart").push({
       dateCreated: new Date().getTime(),
     });
-  }
-
-  async getCart() {
-    const cartId = await this.getOrCreateCartId();
-    return this.db.object("/shopping-cart/" + cartId).valueChanges();
   }
 
   private async getOrCreateCartId(): Promise<string> {
@@ -35,25 +60,26 @@ export class ShoppingCartService {
     return this.db.object("/shopping-cart/" + cartId + "/items/" + productId);
   }
 
-  async addToCart(product) {
-    this.updateCartQuantity(product, 1);
-  }
-
-  async removeFromCart(product) {
-    this.updateCartQuantity(product, -1);
-  }
-
-  private async updateCartQuantity(product, change: number) {
+  private async updateItem(product: Product, change: number) {
     const cartId = await this.getOrCreateCartId();
-    const item$ = this.getItem(cartId, product.id);
+    const item$ = this.getItem(cartId, product.$key);
     item$
       .valueChanges()
       .pipe(take(1))
       .subscribe((item: IItem) => {
         if (!item) {
-          item$.set({ product, quantity: change > 0 ? 1 : 0 });
+          item$.set({
+            //product,
+            title: product.title,
+            imageUrl: product.imageUrl,
+            price: product.price,
+            quantity: change > 0 ? 1 : 0,
+          });
         } else {
           item$.update({ quantity: item.quantity + change });
+          if (item.quantity === 1 && change === -1) {
+            item$.remove();
+          }
         }
       });
   }

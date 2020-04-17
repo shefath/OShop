@@ -1,26 +1,29 @@
+import { OrderService } from "./service/order.service";
 import { ShoppingCartService } from "./service/shopping-cart.service";
-import { CustomFormsModule } from "ng2-validation";
 import { CategoryService } from "./service/category.service";
 import { ProductService } from "./service/product.service";
 import { UserService } from "./user.service";
 import { AuthService } from "./auth.service";
+
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
+import { RouterModule } from "@angular/router";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { FormsModule } from "@angular/forms";
+
+import { CustomFormsModule } from "ng2-validation";
+import { DataTableModule } from "angular-6-datatable";
 
 //Fire base realted modules
 import { AngularFireModule } from "@angular/fire";
 import { AngularFireDatabaseModule } from "@angular/fire/database";
 import { AngularFireAuthModule } from "@angular/fire/auth";
 
-import { RouterModule } from "@angular/router";
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
-import { FormsModule } from "@angular/forms";
-import { DataTableModule } from "angular-6-datatable";
-
 import { AuthGuard } from "./auth-guard.service";
 import { AdminAuthGuard } from "./admin-auth-guard.service";
 
 import { environment } from "src/environments/environment";
+
 import { AppComponent } from "./app.component";
 import { BsNavbarComponent } from "./bs-navbar/bs-navbar.component";
 import { HomeComponent } from "./home/home.component";
@@ -35,7 +38,11 @@ import { AdminOrdersComponent } from "./admin/admin-orders/admin-orders.componen
 import { ProductFormComponent } from "./admin/product-form/product-form.component";
 import { ProductFilterComponent } from "./products/product-filter/product-filter.component";
 import { ProductCardComponent } from "./product-card/product-card.component";
-import { ProductQuantityComponent } from './product-quantity/product-quantity.component';
+import { ProductQuantityComponent } from "./product-quantity/product-quantity.component";
+import { ShoppingCartSummaryComponent } from "./shopping-cart-summary/shopping-cart-summary.component";
+import { ShippingFormComponent } from "./shipping-form/shipping-form.component";
+import { OrderDetailComponent } from "./order-detail/order-detail.component";
+import { OrdersSummaryComponent } from "./orders-summary/orders-summary.component";
 
 @NgModule({
   declarations: [
@@ -54,6 +61,10 @@ import { ProductQuantityComponent } from './product-quantity/product-quantity.co
     ProductFilterComponent,
     ProductCardComponent,
     ProductQuantityComponent,
+    ShoppingCartSummaryComponent,
+    ShippingFormComponent,
+    OrderDetailComponent,
+    OrdersSummaryComponent,
   ],
   imports: [
     BrowserModule,
@@ -85,7 +96,7 @@ import { ProductQuantityComponent } from './product-quantity/product-quantity.co
         canActivate: [AuthGuard],
       },
       {
-        path: "order-success",
+        path: "order-success/:id",
         component: OrderSuccessComponent,
         canActivate: [AuthGuard],
       },
@@ -120,6 +131,7 @@ import { ProductQuantityComponent } from './product-quantity/product-quantity.co
     CategoryService,
     ProductService,
     ShoppingCartService,
+    OrderService,
   ],
   bootstrap: [AppComponent],
 })

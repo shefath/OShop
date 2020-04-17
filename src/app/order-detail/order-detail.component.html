@@ -1,0 +1,33 @@
+<div class="card" *ngIf="order">
+  <div class="card-body">
+    <h5 class="card-title">Order Detail</h5>
+    <div class="card-text">
+      <div class="row">
+        <div class="col-3">Customer</div>
+        <div class="col">{{ order.shipping.name }}</div>
+      </div>
+      <div class="row">
+        <div class="col-3">City</div>
+        <div class="col">{{ order.shipping.city }}</div>
+      </div>
+      <div class="row">
+        <div class="col-3">Date of Order</div>
+        <div class="col">{{ order.datePlaced | date: "mediumDate" }}</div>
+      </div>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li *ngFor="let item of order.items" class="list-group-item">
+        {{ item.quantity }} x {{ item.product.title }}
+        <div class="float-right">
+          {{ item.totalPrice | currency: "USD":"symbol" }}
+        </div>
+      </li>
+      <li class="list-group-item font-weight-bold">
+        Total
+        <div class="float-right">
+          {{ getOrderTotal() | currency: "USD":"symbol" }}
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
